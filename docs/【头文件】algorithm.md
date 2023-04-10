@@ -22,3 +22,25 @@ int main(){
 + 1. 数组
 + 2. 数组末尾的位置，如果数组有10位，就输入num+10
 + 3.【可选】排序规则
+
+# `next_permutation()`与`prev_permutation()`
+这是求数组全排列的函数，直接对原数组进行修改。
+
+它的规则如下：
+
+对于集合{a, b, c}，假设有`a<b<c`，这时候可以求next_permutation(),也就是下一个排列，直到其彻底变为{c, b, a}为止。
+
+我们可以有如下代码:
+```cpp
+int arr1[] = {1,2,3};
+cout<<"用next_permutation对1 2 3的全排列"<<endl;
+do
+{
+	cout << arr1[0] << ' ' << arr1[1] << ' ' << arr1[2] <<'\n';
+}
+while ( next_permutation(arr1,arr1+3) );
+```
+
+## 参数
++ 数组
++ 数组+size
