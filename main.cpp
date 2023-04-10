@@ -10,7 +10,6 @@ using namespace std;
 
 const int N = 10000;
 
-int n; // 大臣的人数
 int r[N], l[N];
 int seq[N]; // seq数组，用来记录顺序，长度为n+1,第一位不记录东西
 int min_l = 1000000;
@@ -53,27 +52,60 @@ void baoli(int n)
     } while (next_permutation(cpy_num, cpy_num + n));
 }
 
+// 解法二：贪心
+
+struct Node
+{
+    int r;
+    int l;
+} dc[N];
+
+// r*l积最大即是最佳排序
+
+int cmp(Node A, Node B)
+{
+    return A.r * A.l < B.r * B.l;
+}
+
 int main()
 {
 
     freopen("in.txt", "r", stdin);
-
+    int n; // 大臣的人数
     cin >> n;
 
-    for (int i = 0; i <= n; i++)
-    {
-        cin >> r[i] >> l[i];
-    }
-    // 这个数组中，排头是国王，剩下的按正常下标代表大臣
+    // 设置国王的左右手
+    Node king;
+    cin >> king.l >> king.r;
 
-    // 思路一：暴力枚举
-    // 枚举不同的sequence，挨个进行计算
-
-    for (int i = 1; i <= n; i++)
+    for (int i = 0; i < n; i++)
     {
-        seq[i] = i;
+        // dc是大臣的左右手，这个数组的大小为n, index 从 0 -> n-1
+        cin >> dc[i].l >> dc[i].r;
     }
-    baoli(n);
-    cout << min_l;
+
+    // 对这个数组进行排序
+    sort(dc, dc + n, cmp);
+
+    unsigned long long MAXIMUM = 0;
+
+    // 开始计算
+    for (int i = 0; i < n; i++)
+    {
+        // i 是number为i的大臣
+        unsigned long long res_l = king.l;
+        for (int j = 0; j < i; j++)
+        {
+            // 从国王开始进行计算，一直算到这个大臣前面的那一位
+            res_l *= dc[j].l;
+        }
+        res_l /= dc[i].r;
+        if (res_l > MAXIMUM)
+        {
+            MAXIMUM = res_l;
+        }
+    }
+
+    cout << MAXIMUM;
     return 0;
 }
