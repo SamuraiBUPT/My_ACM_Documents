@@ -35,3 +35,19 @@ cout << "length of a:" << sizeof(a) / sizeof(a[0]) << endl;  // 5
 比如在这里就是： `len*sizeof(int)`
 
 当然，也可以`sizeof(a)`，求出来的也是字节数。
+
+# queue
+c++自带的`include <queue>`库提供了队列相关的方法
+
+```cpp
+queue<int> a;
+a.push(1);
+a.push(2);
+a.push(3);
+for (auto it = a.front(); it != a.back(); it++)
+{
+    cout << it << endl;
+}
+```
+
+需要注意的是，queue.back()返回的就是3，也就是，他并不是一个空指针，而是带有元素的节点
