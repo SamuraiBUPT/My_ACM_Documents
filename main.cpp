@@ -15,7 +15,8 @@ const unsigned int N = 5000001;
 int num[N];
 int num_sum = 0; // sum先置为0
 int bu;
-int cnt;
+int cnt = 0;
+int n, k;
 
 bool judge(int num_)
 {
@@ -23,12 +24,12 @@ bool judge(int num_)
     {
         return num_ > 1;
     }
-    if (num_ % 6 != 1 || num_ % 6 != 5)
+    if (num_ % 6 != 1 && num_ % 6 != 5)
     {
         // 优化：不是6x+1或者6x-1的数，肯定不是质数
         return false;
     }
-    int temp = pow(num_, 2);
+    int temp = int(sqrt(num_));
     for (int i = 5; i <= temp; i += 6)
     {
         if (num_ % i == 0 || num_ % (i + 2) == 0)
@@ -39,46 +40,36 @@ bool judge(int num_)
     return true;
 }
 
-vector<int> choose;
-
-void dfs()
-{
-    // dfs思路：先确定有没有全部压栈，如果压栈完成则开始处理，否则继续压栈
-    choose.push_back();
-    // 压栈思路：
-    if (choose.size() < bu)
-    {
-        dfs();
+void dfs(int m, int sum, int startx)
+{ // 最重要的递归
+    // m代表现在选择了多少个数
+    // sum表示当前的和
+    // startx表示升序排列，以免算重
+    if (m == k)
+    {                   // 如果选完了的话
+        if (judge(sum)) // 如果和是素数
+            cnt++;      // ans加一
+        return;
     }
-    // 开始处理
-    int temp_sum = num_sum;
-    for (int i = 0; i < bu; i++)
-    {
-        temp_sum -= choose[i];
-    }
-    if (judge(temp_sum))
-    {
-        cnt++;
-    }
-    // 开始回溯
-    choose.pop_back();
-    return;
+    for (int i = startx; i < n; i++)
+        dfs(m + 1, sum + num[i], i + 1); // 递归
+    // 步数要加一，和也要加
+    // 升序起始值要变成i+1,以免算重
+    return; // 这一个步骤下，所有的都枚举完了
+    // 直接返回去
 }
 
 int main()
 {
-    int n, k;
+
     freopen("in.txt", "r", stdin);
     cin >> n >> k;
-    bu = n - k;
-
     for (int i = 0; i < n; i++)
     {
         cin >> num[i];
-        num_sum += num[i];
     }
 
-    // 逆向思考，先计算sum，然后减去挑出来的数字，这样能够将递归的stack深度大大降低
-
+    dfs(0, 0, 0);
+    cout << cnt << endl;
     return 0;
 }
